@@ -1,0 +1,206 @@
+<div class="container topmargin ">
+    <form action="/order-placed" method="post" id="checkout-form">
+
+        <div style="width:50%  ; height:80vh" class="mt-3 col-6 float-left">
+            <div>
+                <h2>Delevery adress</h2>
+            </div>
+
+
+            <div class=" mb-5 " style="height:2 8% ">
+                <div class="row bg-white mt-3  border " style="border-radius:15px ;">
+                    <div class="form-check col-12 ">
+                        {{!-- <div class=" border   row m-3"
+                            style=" background-color:rgba(229, 236, 240, 0.781); border-radius:15px;">
+                            <div class="mt-2 ">
+                                <input type="radio" id="selected-address" class="float-left ml-3 mt-3"
+                                    name="checkout-address">
+                            </div>
+                            <div class="float-left ml-3  mt-2 col-1" style="font-size:15px ;">
+                                <p class="m-0 p-0">Name,Flat</p>
+                                <p class="m-0 p-0">area,landmark</p>
+                                <p class="m-0 p-0">pin,city</p>
+                                <p class="m-0 p-0">mobile</p>
+                                <a href="/edit-adress">edit</a>
+                            </div>
+                        </div> --}}
+
+
+
+                    </div>
+
+
+                    <div class="w-100 ml-4 mt-3">
+                        <h5 class="pl-3">Use another address</h5>
+                    </div>
+                    {{!-- {{#if ()}} --}}
+
+                    <div class="col-7 ml-4 mt-3">
+                        <input type="text" placeholder="Enter your name" name="name" class="form-control " required>
+                    </div>
+
+                    <div class="col-9 ml-4 mt-3">
+                        <input type="text" placeholder="House/Flat" name="house" class="form-control" required>
+                    </div>
+
+                    <div class="col-7 ml-4 mt-3">
+                        <input type="text" placeholder="Area" name="area" class="form-control" required>
+                    </div>
+
+                    <div class="col-7 ml-4 mt-3">
+                        <input type="text" placeholder="Landmark" name="landmark" class="form-control" required>
+                    </div>
+
+                    <div class="col-4 ml-4 mt-3">
+                        <input type="number" placeholder="Pin code" name="pincode" class="form-control" required>
+                    </div>
+
+                    <div class="col-4 ml-4 mt-3">
+                        <input type="text" placeholder="City" name="city" class="form-control" required>
+                    </div>
+
+                    <div class="col-7 ml-4 mt-3 pb-5">
+                        <input type="number" placeholder="Mobile number" name="mobile" class="form-control" required>
+                        <input type="text" name="user" value="{{user}}" hidden>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="  float-right col-6" style="width:50% ;">
+
+            <div class="text-center mt-4  ">
+                <h5> Order Summary</h5>
+                <div class="col bg-light border text-center pl-5"
+                    style=" width:55%; height:150px; border-radius:15px; margin-left:25%">
+                    <p class="row float-left pt-5">Total Items: </p>
+                    <p class="row pl-5 pt-5">{{cartCount}}</p>
+                    <p class="row float-left pt-">Total amount :</p>
+                    <h5 class="row pl-4 pt-"> Rs.{{cartPrice.amount}} </h5>
+                    <input type="text" value="{{cartPrice.amount}}" name="amount" hidden>
+
+                </div>
+            </div>
+
+
+
+            <div class="p-3 text-center ">
+                <h5 class="mt-4">Select payment method</h5>
+
+                <div class="form-check bg-light border"
+                    style="width:57%; margin-left:25%; margin-top:5%;height:120px;  border-radius:15px">
+                    <div class="ml-0 col float-left">
+                        <input class="float-left mt-4" required type="radio" for="cash-on-delevery"
+                            name="payment-method" value="cod">
+                        <label for="cod" class="float-left mt-3 pl-3">Cash on delevery</label>
+                    </div>
+                    <div class="ml-0 col float-left ">
+                        <input type="radio" required for="Paypal" name="payment-method" value="onlinePayment"
+                            class="float-left mt-4">
+                        <label for="paypal" class="float-left mt-3  pl-3 ">Online payment</label>
+                    </div>
+
+
+                </div>
+
+                <button style="border-radius:16px ;" class="btn mt-3 btn-primary" onclick="/placeOrder" value="submit"
+                    type="submit">Proceed to payment</button>
+            </div>
+
+
+
+
+
+
+        </div>
+
+    </form>
+
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+
+    $("#checkout-form").submit((e) => {
+        e.preventDefault()
+        $.ajax({
+            url: "/place-order",
+            method: "post",
+            data: $("#checkout-form").serialize(),
+            success: (response) => {
+                console.log(response)
+                if (response.cod) {
+                    alert("asjfdkl")
+                    window.location.href = "/order-placed"
+                } else {
+                    razorpayPayment(response)
+                }
+
+            }
+        })
+    })
+
+    function razorpayPayment(order) {
+        var options = {
+            "key": "rzp_test_OmG04rRbthJLub", // Enter the Key ID generated from the Dashboard
+            "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "My cart",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response) {
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature)
+
+                verifyPayment(response, order)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9999999999"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+
+        rzp1.on('payment.failed', function (response) {
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+
+    }
+    function verifyPayment(payment, order) {
+        $.ajax({
+            url: "/verify-payment",
+            method: "post",
+            data: {
+                payment, order
+            },
+            success:(result)=>{
+                if(result.payment){
+                     window.location.href = "/order-placed"
+                }
+                else
+                alert('error')
+            }
+        })
+    }
+</script>

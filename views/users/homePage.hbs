@@ -1,0 +1,147 @@
+<section class="topmargin">
+
+  <div class="slideshow-container mt-5 w-100">
+
+    <!-- Full-width images with number and caption text -->
+    <div class="mySlides fade w-100">
+
+      <img src="/images/dell add image.jpg" style="width:100%" height="300px">
+
+    </div>
+
+    <div class="mySlides fade">
+
+      <img src="/images/oppo add.webp" style="width:100%" height="300px">
+
+    </div>
+
+    <div class="mySlides fade">
+
+      <img src="/images/tv add.webp" style="width:100%" height="300px">
+
+    </div>
+
+
+  </div>
+  <br>
+
+  <!-- The dots/circles -->
+  <div style="text-align:center">
+    <span class="dot" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+  </div>
+
+
+  <div class="home-text w-100 float-left col-" style>
+
+    <div style="" class="float-right">
+      <h3 class="" style="color:rgb(46, 166, 214) ; padding-right:200px;padding-top:190px">Get the Best <br> Products
+      </h3>
+      <h5>From Our Store</h5>
+      <a href="/view-products" class="btn explorebtn">Explore Now</a>
+    </div>
+
+  </div>
+
+  <div class="text-center pro-container">
+    <h2 class="">Featured Products</h2>
+
+    <div class="" id="product1">
+      {{#each products}}
+      <div class="product">
+
+        <img src="/product-images/62b5762db718198e5f0e9647.jpg" alt="">
+
+        <div class="details">
+          <span>samsung</span>
+          <h5>{{this.Name}}</h5>
+          <h4>₹{{this.Price}}</h4>
+
+
+
+        </div>
+        <div onclick=addToCart('{{this._id}}')>
+          <div class="icon "><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-cart3 "
+              viewBox="0 0 16 16">
+              <path
+                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      {{/each}}
+
+    </div>
+
+  </div>
+
+  <div id="explorenow">
+    <h3>Explore Now For The Best Deals</h3>
+    <a href="/view-products"><button class="expbtn">
+        Explore now
+      </button>
+    </a>
+  </div>
+
+
+
+
+
+
+
+
+</section>
+
+<script>
+  function addToCart(productId) {
+    $.ajax({
+      url: '/add-to-cart/' + productId,
+      method: 'get',
+      success: function (response) {
+        if (response.status) {
+          let count = $('#cart-count').html()
+          count = parseInt(count) + 1
+          $("#cart-count").html(count)
+          alert('Item added to cart')
+        }
+        else {
+          window.location.href = "/login"
+        }
+
+      }
+
+
+    })
+  }
+
+</script>
+
+
+
+
+
+
+<script>
+  let slideIndex = 0;
+  showSlides();
+
+  function showSlides() {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+    }
+    slideIndex++;
+    if (slideIndex > slides.length) { slideIndex = 1 }
+    for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex - 1].style.display = "block";
+    dots[slideIndex - 1].className += " active";
+    setTimeout(showSlides, 3000); // Change image every 3 seconds
+  }
+</script>

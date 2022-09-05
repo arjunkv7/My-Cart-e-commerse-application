@@ -1,0 +1,42 @@
+<div class="container mt-4 topmargin">
+    <div class=" ml-3">
+        <h4>Orders</h4>
+    </div>
+    <div>
+        <table class="col-12" style="border-spacing:; border-collapse:separate ">
+            <div class="bg-light  mt-3 pb-3 " style="border-radius:10px ;">
+
+               
+                <tr>
+                <th >Order id   </th>
+                <th>Delevery address</th>
+                <th>Amount</th>
+                <th>Status</th>
+                
+                </tr>
+                 {{#each orderDetails}}
+                 <div class="mb-3 ">
+                    <tr class="">
+                    <td class="pl-0">{{this._id}}</td>
+                    <td>{{delevery.name}}
+                                    ,{{delevery.house}},{{delevery.pincode}},{{delevery.mobile}}</td>
+                    <td>{{this.amount}}</td>
+                    <td class="text-success">{{this.payment}}</td>
+                    
+                   
+                    <td><a href="/view-order-products/{{this._id}}" class=" ml-5 btn btn-primary">Details</a></td>
+                </tr>
+                </div>
+
+               
+                {{/each}}
+
+
+
+            </div>
+
+        </table>
+    </div>
+
+
+</div>

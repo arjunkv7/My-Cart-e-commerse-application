@@ -1,0 +1,39 @@
+<section class="">
+  <div class="container">
+    <div class="row p-4" id="display-products"><h2 class="m-auto">Products</h2></div>
+    <div class="row">
+      <a class="btn btn-success ml-auto mr-3 mb-2" href="admin/add-product">Add new item</a>
+    </div>
+    <table class="table">
+      <thead class="thead-dark ">
+        <tr>
+        
+          <th scope="col">Product Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Price</th>
+          <th scope="col">Image</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each products}}
+        <tr>
+          
+          <td>{{this.Name}}</td>
+          <td>{{this.Category}}</td>
+          <td>{{this.Price}}</td>
+          <td><img  style="height:50px; width: 50px;" src="/product-images/{{this._id}}.jpg" alt=""></td>
+          <td>
+           <a href="/admin/edit-product?proId={{this._id}}" class="btn btn-primary">Edit</a> 
+            <a href="/admin/delete-product/{{this._id}}" class="btn btn-danger" onclick="return confirm('Do you really want to delete this item?')">Delete</a> 
+          </td>
+
+        </tr>
+        {{/each}}
+      </tbody>
+
+    </table>
+
+
+  </div>
+</section>
